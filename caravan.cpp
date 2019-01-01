@@ -14,23 +14,22 @@
 #include <stdlib.h>
 
 #include "caravan.h"
-struct Node{
-    PackAnimal animal;
-    struct Node *next;
-};
-
+#include "general.h"
 struct CaravanImplementation{
     int length;
-    struct Node* head = (struct Node*)malloc(sizeof(struct Node));
+    PackAnimal animal;
+    struct CaravanImplementation* next;
 };
+
+Caravan head = (Caravan)malloc(sizeof(struct CaravanImplementation));
 Caravan c = (Caravan)malloc(sizeof(Caravan));
 
 Caravan new_caravan()
 {
-  c->head->animal = 0;
-  c->head -> next = 0;
-  c -> length = 0;
-  return c;
+  head->animal = 0;
+  head -> next = 0;
+  head -> length = 0;
+  return head;
 
 }
 
@@ -41,10 +40,30 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
+  Caravan currentCaravan = head;
+  while (currentCaravan != 0)
+  {
+    if (caravan == head)
+    {
+      sfree(caravan);
+    }
+    else if (caravan == currentCaravan->next)
+    {
+      currentCaravan->next = caravan->next;
+      sfree(caravan);
+    }
+    currentCaravan = currentCaravan->next;
+  }
 }
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
+  if (animal != 0 && get_caravan(animal) == 0)
+  {
+    caravan->animal = animal;
+    caravan->length++;
+    add_to_caravan(animal, caravan);
+  }
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
