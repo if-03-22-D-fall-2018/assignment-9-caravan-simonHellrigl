@@ -21,7 +21,7 @@ struct CaravanImplementation{
     struct CaravanImplementation* next;
 };
 
-Caravan head = (Caravan)malloc(sizeof(struct CaravanImplementation));
+Caravan head = (Caravan)malloc(sizeof(Caravan));
 Caravan c = (Caravan)malloc(sizeof(Caravan));
 
 Caravan new_caravan()
