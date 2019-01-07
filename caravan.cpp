@@ -10,69 +10,90 @@
  * <your description here>
  *-----------------------------------------------------------------------------
 */
-#include <cstdlib>
 #include <stdlib.h>
 
 #include "caravan.h"
 #include "general.h"
+
+typedef struct NodeImplementation* Node;
+
+struct NodeImplementation{
+
+  PackAnimal animal;
+  struct NodeImplementation* next;
+
+};
 struct CaravanImplementation{
     int length;
-    PackAnimal animal;
-    struct CaravanImplementation* next;
+    Node head;
+
 };
 
-Caravan head = (Caravan)malloc(sizeof(Caravan));
-Caravan c = (Caravan)malloc(sizeof(Caravan));
 
 Caravan new_caravan()
 {
-  head->animal = 0;
-  head -> next = 0;
-  head -> length = 0;
-  return head;
-
+  Caravan caravan = (Caravan) malloc(sizeof(struct CaravanImplementation));
+  caravan->length = 0;
+  caravan->head = 0;
+  return caravan;
 }
 
 int get_length(Caravan caravan)
 {
-  return caravan->length;
+    return caravan->length;
 }
 
 void delete_caravan(Caravan caravan)
 {
-  Caravan currentCaravan = head;
-  while (currentCaravan != 0)
-  {
-    if (caravan == head)
+    Node current = caravan->head;
+    while (current != 0)
     {
-      sfree(caravan);
+      Node temp = current;
+      current = current->next;
+      sfree(temp);
     }
-    else if (caravan == currentCaravan->next)
-    {
-      currentCaravan->next = caravan->next;
-      sfree(caravan);
-    }
-    currentCaravan = currentCaravan->next;
-  }
+    sfree(caravan);
 }
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  if (animal != 0 && get_caravan(animal) == 0)
+  if (animal == 0) return;
+  Node newNode = (Node)malloc(sizeof(struct NodeImplementation));
+  newNode->animal = animal;
+  Node current = caravan->head;
+  if (caravan->head == 0)
   {
-    caravan->animal = animal;
-    caravan->length++;
-    add_to_caravan(animal, caravan);
+    caravan->head = newNode;
   }
+  else
+  {
+    while (current->next != 0)
+    {
+      current = current->next;
+    }
+    current->next = newNode;
+  }
+  caravan->length++;
+  add_to_caravan(animal, caravan);
+
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
+  
 }
 
 int get_caravan_load(Caravan caravan)
 {
-  return 0;
+  int counter = 0;
+  Node current = caravan->head;
+  while (current != 0)
+  {
+    counter+=get_load(current->animal);
+    current = current->next;
+  }
+  return counter;
+
 }
 
 void unload(Caravan caravan)
