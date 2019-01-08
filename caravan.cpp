@@ -74,7 +74,10 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
             {
                 current = current->next;
             }
-            if(current->animal == animal) return;
+            if(current->animal == animal)
+            {
+              return;
+            }
             current->next = newNode;
         }
         add_to_caravan(animal, caravan);
@@ -85,6 +88,38 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
+  Node current = caravan->head;
+  Node temp;
+  if (animal != 0)
+  {
+    if (current != 0 && current->animal == animal)
+    {
+      caravan->head = current->next;
+      sfree(current);
+      remove_from_caravan(animal, caravan);
+
+      caravan->length--;
+
+    }
+
+    while ( current != 0 && current->animal != animal)
+    {
+      temp = current;
+      current = current->next;
+    }
+
+    if (current != 0)
+    {
+      temp->next = current->next;
+      sfree(current);
+      remove_from_caravan(animal, caravan);
+
+      caravan->length--;
+    }
+
+
+
+  }
 
 }
 
